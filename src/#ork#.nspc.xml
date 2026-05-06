@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_NSPC" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <NSPC>
+    <NAMESPACE>/ORK/</NAMESPACE>
+    <REPLICENSE>01234567890123456789</REPLICENSE>
+   </NSPC>
+   <NSPC_TEXT>
+    <SPRAS>E</SPRAS>
+    <DESCRIPTN>https://github.com/eplamsi</DESCRIPTN>
+    <OWNER>github.com/eplamsi</OWNER>
+   </NSPC_TEXT>
+  </asx:values>
+ </asx:abap>
+</abapGit>

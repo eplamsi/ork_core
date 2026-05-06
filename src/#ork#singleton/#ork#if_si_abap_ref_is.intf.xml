@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_SI_ABAP_REF_IS</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Reference is ...</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>C</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to type C.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CLIKE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a C-like type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>COMPATIBLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check whether references are compatible.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CSEQUENCE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a character sequence.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>HASHED_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a hashed table.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INDEX_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to an index table.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT2</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to INT2 type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT4</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to INT4 type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT8</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to INT8 type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>N</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to type N.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>NOT_NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference is bound / not null.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference is null / not bound.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>NUMERIC</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a numeric type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to an object.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>READ_ONLY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference is bound and read-only.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REF</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a data reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SIMPLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a simple type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SORTED_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a sorted table.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STANDARD_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a standard table.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to STRING type.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a table.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference is bound and not read-only.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>X</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to type X.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>XSEQUENCE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Check if reference points to a byte sequence.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_JSON_PATH</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>JSON Path</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>FIELD</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Add field to JSON path.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INDEX</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Add index to JSON path.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SEGMENTS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Return JSON path segments.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TO_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Return JSON path as string.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

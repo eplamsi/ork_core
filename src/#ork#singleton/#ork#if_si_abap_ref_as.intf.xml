@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_SI_ABAP_REF_AS</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Reference try cast as ...</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>HASHED_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as hashed table reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INDEX_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as index table reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT2</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as INT2 value.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT4</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as INT4 value.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INT8</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as INT8 value.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as object reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>READ_ONLY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as read-only reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REF</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as data reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SIMPLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as simple data reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SORTED_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as sorted table reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STANDARD_TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as standard table reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as string value.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STRUCT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as structure reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as table reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITABLE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast as writable reference.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

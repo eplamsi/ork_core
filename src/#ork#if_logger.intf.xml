@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_LOGGER</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Logger</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CHILD</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a hierarchical child logger.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CLEAR</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Clears all stored log entries.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ERROR</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates an error log entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>EXCEPTION</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a log entry from an exception.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>FLUSH</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Flushes entries to target system.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CONTEXT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the current logger context.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ENTRIES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns all stored log entries.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_SCOPE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Returns the current logger scope.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INFO</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates an informational log entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LOG</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a log entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LOG_LAST_SYMESSAGE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Logs the last SAP system message.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SUCCESS</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a success log entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TO_FILE_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Serializes entries to a file string.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TO_JSON</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Serializes entries to JSON.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WARNING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a warning log entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WITH</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a new logger with one additional context entry.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WITH_CONTEXT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Creates a new logger with additional context.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>CHILD</CMPNAME>
+     <SCONAME>SCOPE</SCONAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>scope</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
+  </asx:values>
+ </asx:abap>
+</abapGit>

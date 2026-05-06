@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_SI_ABAP_RTTD_OBJECT</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>RTT Descriptor: cl_abap_objectdescr</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>BY_DATA</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object descriptor by data object.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>BY_NAME</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object descriptor by type name.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>BY_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object descriptor by object reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>BY_REF</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object descriptor from a data reference.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CAST</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Cast type descriptor to object descriptor.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

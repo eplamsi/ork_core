@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_JSON_WRITER</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>JSON Writer</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_ARRAY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON array node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_BOOL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON boolean node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON null node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_NUMBER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON number node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON object node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WRITE_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Write JSON string node.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

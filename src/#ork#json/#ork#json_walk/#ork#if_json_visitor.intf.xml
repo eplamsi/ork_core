@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>/ORK/IF_JSON_VISITOR</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>JSON Visitor</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>5</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>ENTER_ARRAY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when traversal enters a JSON array node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ENTER_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when traversal enters a JSON object node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LEAVE_ARRAY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called after traversal exits a JSON array node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>LEAVE_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called after traversal exits a JSON object node.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>VISIT_BOOL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when a JSON boolean node is visited.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>VISIT_NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when a JSON null node is visited.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>VISIT_NUMBER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when a JSON number node is visited.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>VISIT_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Called when a JSON string node is visited.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
