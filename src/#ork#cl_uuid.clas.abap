@@ -1,3 +1,4 @@
+"! <p class="shorttext synchronized">UUID</p>
 CLASS /ork/cl_uuid DEFINITION
   PUBLIC
   CREATE PROTECTED.
@@ -149,7 +150,7 @@ CLASS /ork/cl_uuid DEFINITION
 
   PROTECTED SECTION.
     CLASS-DATA sm_buffer TYPE REF TO /ork/if_weak_map.
-    CLASS-DATA sm_temp TYPE REF TO /ork/cl_uuid.
+    CLASS-DATA sm_temp   TYPE REF TO /ork/cl_uuid.
 
     DATA my_uuid TYPE sysuuid_x16.
 
@@ -158,7 +159,6 @@ ENDCLASS.
 
 
 CLASS /ork/cl_uuid IMPLEMENTATION.
-
   METHOD /ork/if_formattable~to_string.
     IF format_provider IS NOT SUPPLIED.
       result = /ork/if_uuid~to_string( format = format ).
@@ -185,8 +185,7 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
         cl_system_uuid=>convert_uuid_x16_static( EXPORTING uuid     = my_uuid
                                                  IMPORTING uuid_c22 = result ).
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
@@ -195,8 +194,7 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
         cl_system_uuid=>convert_uuid_x16_static( EXPORTING uuid     = my_uuid
                                                  IMPORTING uuid_c26 = result ).
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
@@ -205,13 +203,11 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
         cl_system_uuid=>convert_uuid_x16_static( EXPORTING uuid     = my_uuid
                                                  IMPORTING uuid_c32 = result ).
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
   METHOD /ork/if_uuid~to_string.
-
     " see https://learn.microsoft.com/de-de/dotnet/api/system.guid.tostring
 
     DATA(frm) = CONV /ork/if_uuid=>ty_format( format ).
@@ -257,7 +253,6 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
                   },0x{ result+28(2)
                   },0x{ result+30(2) }\}\}|.
     ENDCASE.
-
   ENDMETHOD.
 
   METHOD /ork/if_uuid~to_x16.
@@ -295,11 +290,9 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
     sm-uuid_c26-empty = sm-uuid-empty->to_c26( ).
     sm-uuid_c26-min   = sm-uuid-min->to_c26( ).
     sm-uuid_c26-max   = sm-uuid-max->to_c26( ).
-
   ENDMETHOD.
 
   METHOD s_convert.
-
     TRY.
 
         DATA(rtts) = cl_abap_typedescr=>describe_by_data( uuid ).
@@ -329,7 +322,6 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
         RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
-
   ENDMETHOD.
 
   METHOD s_convert_c22_to_c26.
@@ -465,8 +457,7 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
                             from = 'abcdef'
                             to   = 'ABCDEF' ).
           IF NOT ( uuid CO ' 0123456789ABCDEF' ).
-            RAISE EXCEPTION TYPE /ork/cx_exception
-              EXPORTING text = |'{ uuid }' cannot be interpreted as a UUID.|.
+            RAISE EXCEPTION NEW /ork/cx_exception( text = |'{ uuid }' cannot be interpreted as a UUID.| ).
           ENDIF.
           uuid = to_upper( uuid ).
         ENDIF.
@@ -577,7 +568,6 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD s_parse_to_x16.
-
     TRY.
 
         " remove spaces ...
@@ -617,7 +607,5 @@ CLASS /ork/cl_uuid IMPLEMENTATION.
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
         RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
-
   ENDMETHOD.
-
 ENDCLASS.

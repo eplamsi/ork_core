@@ -17,6 +17,51 @@
      <DESCRIPT>Get member node</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_ARRAY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get array member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BOOL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get boolean member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BOOL_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get boolean member value</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get null member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NUMBER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get number member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NUMBER_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get number member value</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get string member node</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STRING_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get string member value</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>HAS</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Check member existence</DESCRIPT>

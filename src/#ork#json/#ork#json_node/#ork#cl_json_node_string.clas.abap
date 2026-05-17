@@ -32,7 +32,6 @@ ENDCLASS.
 
 
 CLASS /ork/cl_json_node_string IMPLEMENTATION.
-
   METHOD cast.
     RETURN me.
   ENDMETHOD.
@@ -84,6 +83,7 @@ CLASS /ork/cl_json_node_string IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_node~freeze.
+    CHECK NOT _is_immutable( my ).
     my ?= _to_immutable( my ).
   ENDMETHOD.
 
@@ -92,7 +92,6 @@ CLASS /ork/cl_json_node_string IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_node~equals.
-
     IF        other IS NOT BOUND
        OR NOT other->is_string( ).
       RETURN abap_false.
@@ -101,7 +100,5 @@ CLASS /ork/cl_json_node_string IMPLEMENTATION.
     _lazy_read_to_end( ).
     RETURN xsdbool(    other = me
                     OR other->as_string( )->get( ) = my->value ).
-
   ENDMETHOD.
-
 ENDCLASS.

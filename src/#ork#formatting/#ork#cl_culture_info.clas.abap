@@ -424,19 +424,24 @@ CLASS /ork/cl_culture_info IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD s_get_name_by_langu.
-
-    DATA l_langu TYPE c LENGTH 1.
+    DATA l_langu TYPE c LENGTH 2.
     DATA l_key   TYPE string.
 
-    l_langu = language.
-
-    SELECT SINGLE LanguageISOCode FROM i_language
-      WHERE Language = @language
-      INTO @l_langu.
-
-    IF sy-subrc <> 0.
-      CLEAR l_langu.
+    IF language IS NOT INITIAL.
+      TRY.
+          l_langu = xco_cp=>language( language )->as( xco_cp_language=>format->iso_639 ).
+        CATCH cx_root ##NO_HANDLER.
+      ENDTRY.
     ENDIF.
+    " l_langu = language.
+
+    " SELECT SINGLE LanguageISOCode FROM i_language
+    " WHERE Language = @language
+    " INTO @l_langu.
+    " --
+    " IF sy-subrc <> 0.
+    " CLEAR l_langu.
+    " ENDIF.
 
     IF country IS INITIAL AND l_langu IS INITIAL.
       CLEAR l_key.
@@ -452,8 +457,7 @@ CLASS /ork/cl_culture_info IMPLEMENTATION.
         CLEAR l_key.
       ENDIF.
     ELSE.
-      l_key = |{ l_langu }-{ country }|.
-      l_key = to_upper( l_key ).
+      l_key = |{ to_upper( l_langu ) }-{ to_upper( country ) }|.
       SELECT SINGLE culture_key FROM /ork/t_frt_cinfo
         WHERE culture_key = @l_key
         INTO @l_key.
@@ -463,6 +467,11 @@ CLASS /ork/cl_culture_info IMPLEMENTATION.
     ENDIF.
 
     result = l_key.
+
+    FIND FIRST OCCURRENCE OF `-` IN result MATCH OFFSET DATA(off).
+    IF off > 0.
+      result = |{ to_lower( result(off) ) }{ result+off }|.
+    ENDIF.
 
   ENDMETHOD.
 

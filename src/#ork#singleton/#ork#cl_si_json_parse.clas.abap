@@ -9,14 +9,14 @@ ENDCLASS.
 
 
 CLASS /ork/cl_si_json_parse IMPLEMENTATION.
-
   METHOD /ork/if_si_json_parse~bytes.
     RETURN /ork/cl_json_parser=>s_parse_bytes( json     = json
-                                               encoding = encoding ).
+                                               encoding = encoding
+                                               parser   = parser ).
   ENDMETHOD.
 
   METHOD /ork/if_si_json_parse~string.
-    RETURN /ork/cl_json_parser=>s_parse( json ).
+    RETURN /ork/cl_json_parser=>s_parse( json   = json
+                                         parser = parser ).
   ENDMETHOD.
-
 ENDCLASS.

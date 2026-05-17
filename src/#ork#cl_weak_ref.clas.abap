@@ -10,7 +10,6 @@ ENDCLASS.
 
 
 CLASS /ork/cl_weak_ref IMPLEMENTATION.
-
   METHOD s_new.
     IF lcl_weak_ref=>sm_exists = abap_true.
       RETURN NEW lcl_weak_ref( obj ).
@@ -18,5 +17,4 @@ CLASS /ork/cl_weak_ref IMPLEMENTATION.
       RETURN NEW lcl_strong_ref( obj ).
     ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

@@ -430,3 +430,183 @@ CLASS ltc_unit_test IMPLEMENTATION.
   ENDMETHOD.
 
 ENDCLASS.
+
+
+
+
+
+" ABAP Unit tests for /ork/cl_culture_info.
+" Copy into the test include of /ork/cl_culture_info or run as local test class.
+
+CLASS ltc_unit_test_ai DEFINITION FINAL FOR TESTING
+  RISK LEVEL HARMLESS
+  DURATION SHORT.
+
+  PRIVATE SECTION.
+    METHODS singleton_and_lookup FOR TESTING.
+    METHODS invariant_metadata FOR TESTING.
+    METHODS named_culture_metadata FOR TESTING.
+    METHODS date_time_format_values FOR TESTING.
+    METHODS number_format_values FOR TESTING.
+    METHODS overwritten_culture_values FOR TESTING.
+    METHODS language_name_mapping FOR TESTING.
+ENDCLASS.
+
+CLASS ltc_unit_test_ai IMPLEMENTATION.
+
+  METHOD singleton_and_lookup.
+    DATA(invariant) = /ork/cl_culture_info=>invariant.
+    DATA(current)   = /ork/cl_culture_info=>current.
+    DATA(de_de)     = /ork/cl_culture_info=>s_get( `de-DE` ).
+    DATA(de_de2)    = /ork/cl_culture_info=>s_get( `de-DE` ).
+    DATA(missing)   = /ork/cl_culture_info=>s_get( `missing-culture` ).
+    DATA(all)       = /ork/cl_culture_info=>s_get_all( ).
+
+    cl_abap_unit_assert=>assert_bound( invariant ).
+    cl_abap_unit_assert=>assert_bound( current ).
+    cl_abap_unit_assert=>assert_bound( de_de ).
+    cl_abap_unit_assert=>assert_equals( exp = de_de act = de_de2 ).
+    cl_abap_unit_assert=>assert_not_initial( all ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `` act = missing->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = invariant->lcid( ) act = missing->lcid( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = invariant->date_time_format( ) act = missing->date_time_format( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = invariant->number_format( ) act = missing->number_format( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = invariant act = invariant->base( ) ).
+  ENDMETHOD.
+
+  METHOD invariant_metadata.
+    DATA(culture) = /ork/cl_culture_info=>invariant.
+
+    cl_abap_unit_assert=>assert_equals( exp = `` act = culture->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `Invariant Language (Invariant Country)` act = culture->english_name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `Invariant Language (Invariant Country)` act = culture->native_name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 127 act = culture->lcid( ) ).
+    cl_abap_unit_assert=>assert_false( culture->is_neutral_culture( ) ).
+
+    cl_abap_unit_assert=>assert_bound( culture->date_time_format( ) ).
+    cl_abap_unit_assert=>assert_bound( culture->number_format( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = culture act = culture->base( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = /ork/cl_format_info_date_time=>cm-invariant act = culture->date_time_format( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = /ork/cl_format_info_number=>cm-invariant act = culture->number_format( ) ).
+  ENDMETHOD.
+
+  METHOD named_culture_metadata.
+    DATA(de_de) = /ork/cl_culture_info=>s_get( `de-DE` ).
+    DATA(en_us) = /ork/cl_culture_info=>s_get( `en-US` ).
+    DATA(fr_fr) = /ork/cl_culture_info=>s_get( `fr-FR` ).
+    DATA(neutral_de) = /ork/cl_culture_info=>s_get( `de` ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `de-DE` act = de_de->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `en-US` act = en_us->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `fr-FR` act = fr_fr->name( ) ).
+    cl_abap_unit_assert=>assert_not_initial( de_de->english_name( ) ).
+    cl_abap_unit_assert=>assert_not_initial( de_de->native_name( ) ).
+
+    cl_abap_unit_assert=>assert_true( xsdbool( de_de->lcid( ) <> /ork/cl_culture_info=>invariant->lcid( ) ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( de_de->lcid( ) <> de_de->base( )->lcid( ) ) ).
+    cl_abap_unit_assert=>assert_bound( de_de->date_time_format( ) ).
+    cl_abap_unit_assert=>assert_bound( de_de->number_format( ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( neutral_de->name( ) = `de` OR neutral_de->name( ) = `` ) ).
+  ENDMETHOD.
+
+  METHOD date_time_format_values.
+    DATA(invariant) = /ork/cl_culture_info=>invariant->date_time_format( ).
+    DATA(en_us) = /ork/cl_culture_info=>s_get( `en-US` )->date_time_format( ).
+    DATA(de_de) = /ork/cl_culture_info=>s_get( `de-DE` )->date_time_format( ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `AM` act = invariant->am_designator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `PM` act = invariant->pm_designator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `/` act = invariant->date_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `:` act = invariant->time_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `MM/dd/yyyy` act = invariant->short_date_pattern( ) ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `Monday` act = invariant->get_day_name( /ork/if_format_info_date_time=>cm_day_of_week-monday ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `Mon` act = invariant->get_short_day_name( /ork/if_format_info_date_time=>cm_day_of_week-monday ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `January` act = invariant->get_month_name( /ork/if_format_info_date_time=>cm_month-january ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `Jan` act = invariant->get_short_month_name( /ork/if_format_info_date_time=>cm_month-january ) ).
+    cl_abap_unit_assert=>assert_equals( exp = /ork/if_format_info_date_time=>cm_day_of_week-sunday act = en_us->first_day_of_week( ) ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `.` act = de_de->date_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `Mai` act = de_de->get_month_name( /ork/if_format_info_date_time=>cm_month-may ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( de_de->short_date_pattern( ) <> invariant->short_date_pattern( ) ) ).
+  ENDMETHOD.
+
+  METHOD number_format_values.
+    DATA(invariant) = /ork/cl_culture_info=>invariant->number_format( ).
+    DATA(en_us) = /ork/cl_culture_info=>s_get( `en-US` )->number_format( ).
+    DATA(de_de) = /ork/cl_culture_info=>s_get( `de-DE` )->number_format( ).
+    DATA(fr_fr) = /ork/cl_culture_info=>s_get( `fr-FR` )->number_format( ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `.` act = invariant->number_decimal_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `,` act = invariant->number_group_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `-` act = invariant->negative_sign( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 2 act = invariant->number_decimal_digits( ) ).
+    cl_abap_unit_assert=>assert_not_initial( invariant->native_digits( ) ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `.` act = en_us->number_decimal_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `,` act = de_de->number_decimal_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `.` act = de_de->number_group_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `,` act = fr_fr->number_decimal_separator( ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( de_de->number_decimal_separator( ) <> en_us->number_decimal_separator( ) ) ).
+  ENDMETHOD.
+
+  METHOD overwritten_culture_values.
+    DATA(base) = /ork/cl_culture_info=>s_get( `en-US` ).
+    DATA(data) = vaLUE /ork/if_culture_info=>ty_s_data( ).
+
+    data-name = `en-US-ai`.
+    data-parent_name = base->name( ).
+    data-lcid = -1.
+    data-native_name = `AI Native`.
+    data-english_name = `AI English`.
+
+    CREATE DATA data-date_time_format-short_date_pattern.
+    data-date_time_format-short_date_pattern->* = `yyyy-MM-dd`.
+    CREATE DATA data-date_time_format-date_separator.
+    data-date_time_format-date_separator->* = `-`.
+    CREATE DATA data-number_format-number_decimal_separator.
+    data-number_format-number_decimal_separator->* = `#`.
+    CREATE DATA data-number_format-number_group_separator.
+    data-number_format-number_group_separator->* = `_`.
+
+    DATA(custom) = /ork/cl_culture_info=>s_new_overwritten(
+      culture_info_data = data
+      base              = base
+    ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `en-US-ai` act = custom->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `en-US` act = custom->base( )->name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = 0 act = custom->lcid( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `AI Native` act = custom->native_name( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `AI English` act = custom->english_name( ) ).
+
+    cl_abap_unit_assert=>assert_equals( exp = `yyyy-MM-dd` act = custom->date_time_format( )->short_date_pattern( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `-` act = custom->date_time_format( )->date_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `#` act = custom->number_format( )->number_decimal_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = `_` act = custom->number_format( )->number_group_separator( ) ).
+    cl_abap_unit_assert=>assert_equals( exp = base->date_time_format( )->long_time_pattern( ) act = custom->date_time_format( )->long_time_pattern( ) ).
+  ENDMETHOD.
+
+  METHOD language_name_mapping.
+    DATA(empty_name) = /ork/cl_culture_info=>s_get_name_by_langu( language = '' country = '' ).
+    DATA(unknown_language) = /ork/cl_culture_info=>s_get_name_by_langu( language = '!' country = '' ).
+    DATA(unknown_country) = /ork/cl_culture_info=>s_get_name_by_langu( language = '' country = `ZZ` ).
+    DATA(de_name) = /ork/cl_culture_info=>s_get_name_by_langu( language = 'D' country = `DE` ).
+    DATA(en_name) = /ork/cl_culture_info=>s_get_name_by_langu( language = 'E' country = `US` ).
+
+    cl_abap_unit_assert=>assert_initial( empty_name ).
+    cl_abap_unit_assert=>assert_initial( unknown_language ).
+    cl_abap_unit_assert=>assert_initial( unknown_country ).
+    cl_abap_unit_assert=>assert_true( xsdbool( de_name = `de-DE` OR de_name = `de` OR de_name IS INITIAL ) ).
+    cl_abap_unit_assert=>assert_true( xsdbool( en_name = `en-US` OR en_name = `en` OR en_name IS INITIAL ) ).
+
+    IF de_name IS NOT INITIAL.
+      cl_abap_unit_assert=>assert_bound( /ork/cl_culture_info=>s_get( de_name ) ).
+    ENDIF.
+    IF en_name IS NOT INITIAL.
+      cl_abap_unit_assert=>assert_bound( /ork/cl_culture_info=>s_get( en_name ) ).
+    ENDIF.
+  ENDMETHOD.
+
+ENDCLASS.

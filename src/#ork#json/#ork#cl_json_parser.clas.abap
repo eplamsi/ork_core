@@ -6,6 +6,8 @@ CLASS /ork/cl_json_parser DEFINITION
     INTERFACES /ork/if_json_parser.
 
     CLASS-DATA default TYPE REF TO /ork/if_json_parser READ-ONLY.
+    CLASS-DATA lazy    TYPE REF TO /ork/if_json_parser READ-ONLY.
+    CLASS-DATA sxml    TYPE REF TO /ork/if_json_parser READ-ONLY.
 
     CLASS-METHODS s_parse IMPORTING !json         TYPE string
                                     parser        TYPE REF TO /ork/if_json_parser DEFAULT default
@@ -130,9 +132,7 @@ ENDCLASS.
 
 
 CLASS /ork/cl_json_parser IMPLEMENTATION.
-
   METHOD s_parse_result.
-
     TYPES: BEGIN OF ty_s_complex_level,
              "! TY_S_COMPLEX_LEVEL of a previous ComplexNode (array or object)
              previous    TYPE REF TO data,
@@ -178,8 +178,8 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
               vars-string_token->length = match_offset - vars-string_token->offset.
               json_offset = match_offset + _1.
               " Decide whether this is a StringNode or a member name
-              IF     vars-complex_level          IS BOUND
-                 AND vars-complex_level->token   IS BOUND
+              IF     vars-complex_level              IS BOUND
+                 AND vars-complex_level->token       IS BOUND
                  AND vars-complex_level->token->type  = cm_token_types-left_brace
                  AND vars-complex_level->colon_token IS NOT BOUND.
                 vars-string_token->type = cm_token_types-member_name.
@@ -206,7 +206,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
               OR `n`
               OR `r`
               OR `t`.
-              json_offset = json_offset + _1.
+              json_offset += _1.
               INSERT VALUE #( type   = cm_token_types-backslash
                               offset = json_offset - _2
                               length = _2
@@ -230,7 +230,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 RAISE EXCEPTION exception.
               ENDIF.
 
-              json_offset = json_offset + _5.
+              json_offset += _5.
               INSERT VALUE #( type   = cm_token_types-backslash
                               offset = json_offset - _6
                               length = 6
@@ -257,8 +257,8 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
 
             CASE match.
               WHEN `"`.
-                vars-string_state = cs_string_states-in_string.
-                vars-node         = vars-node + _1.
+                vars-string_state  = cs_string_states-in_string.
+                vars-node         += _1.
                 INSERT VALUE #( type   = cm_token_types-string
                                 offset = match_offset + _1
                                 deep   = vars-deep
@@ -274,7 +274,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                                  message = `'true' after 't' character expected, but not found.` ).
                   RAISE EXCEPTION exception.
                 ENDIF.
-                vars-node = vars-node + _1.
+                vars-node += _1.
                 INSERT VALUE #( type   = cm_token_types-bool
                                 offset = match_offset
                                 length = _4
@@ -294,7 +294,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                                  message = `'false' after 'f' character expected, but not found.` ).
                   RAISE EXCEPTION exception.
                 ENDIF.
-                vars-node = vars-node + _1.
+                vars-node += _1.
                 INSERT VALUE #( type   = cm_token_types-bool
                                 offset = match_offset
                                 length = _5
@@ -315,7 +315,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                        message = `'null' after 'n' character expected, but not found.` ).
                   RAISE EXCEPTION exception.
                 ENDIF.
-                vars-node = vars-node + _1.
+                vars-node += _1.
                 INSERT VALUE #( type   = cm_token_types-null
                                 offset = match_offset
                                 length = _4
@@ -328,8 +328,8 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 json_offset = match_offset + _4.
                 CONTINUE.
               WHEN `{`.
-                vars-node          = vars-node + _1.
-                vars-complex_level = NEW #( previous = vars-complex_level ).
+                vars-node          += _1.
+                vars-complex_level  = NEW #( previous = vars-complex_level ).
                 INSERT VALUE #( type   = cm_token_types-left_brace
                                 offset = match_offset
                                 length = _1
@@ -337,19 +337,20 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                 node   = vars-node )
                        INTO TABLE result REFERENCE INTO vars-complex_level->token.
                 CLEAR vars-complex_level->colon_token.
-                vars-deep = vars-deep + _1.
+                vars-deep += _1.
                 json_offset = match_offset + _1.
                 CONTINUE.
               WHEN `}`.
-                IF     vars-complex_level        IS NOT BOUND
-                   OR vars-complex_level->token  IS NOT BOUND
+                IF    vars-complex_level              IS NOT BOUND
+                   OR vars-complex_level->token       IS NOT BOUND
                    OR vars-complex_level->token->type <> cm_token_types-left_brace.
-                  exception = s_new_parse_error( json    = json
-                                                 offset  = match_offset
-                                                 message = `Invalid token. there is no open object which should be closed with '}'.` ).
+                  exception = s_new_parse_error(
+                                  json    = json
+                                  offset  = match_offset
+                                  message = `Invalid token. there is no open object which should be closed with '}'.` ).
                   RAISE EXCEPTION exception.
                 ENDIF.
-                vars-deep = vars-deep - _1.
+                vars-deep -= _1.
                 INSERT VALUE #( type   = cm_token_types-right_brace
                                 offset = match_offset
                                 length = _1
@@ -363,7 +364,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 json_offset = match_offset + _1.
                 CONTINUE.
               WHEN `,`.
-                IF     vars-complex_level       IS NOT BOUND
+                IF    vars-complex_level        IS NOT BOUND
                    OR vars-complex_level->token IS NOT BOUND.
                   exception = s_new_parse_error( json    = json
                                                  offset  = match_offset
@@ -388,11 +389,11 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                 deep   = vars-deep
                                 node   = vars-node )
                        INTO TABLE result REFERENCE INTO DATA(colon_token).
-                vars-node = vars-node - _1.
+                vars-node -= _1.
                 json_offset = match_offset + _1.
-                IF     vars-complex_level       IS BOUND
-                   AND vars-complex_level->token IS BOUND
-                   AND vars-complex_level->token->type = cm_token_types-left_brace.
+                IF     vars-complex_level              IS BOUND
+                   AND vars-complex_level->token       IS BOUND
+                   AND vars-complex_level->token->type  = cm_token_types-left_brace.
                   vars-complex_level->colon_token = colon_token.
                 ELSE.
                   exception = s_new_parse_error( json    = json
@@ -402,8 +403,8 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 ENDIF.
                 CONTINUE.
               WHEN `[`.
-                vars-node          = vars-node + _1.
-                vars-complex_level = NEW #( previous = vars-complex_level ).
+                vars-node          += _1.
+                vars-complex_level  = NEW #( previous = vars-complex_level ).
                 INSERT VALUE #( type   = cm_token_types-left_square_bracket
                                 offset = match_offset
                                 length = _1
@@ -411,19 +412,20 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                                 node   = vars-node )
                        INTO TABLE result REFERENCE INTO vars-complex_level->token.
                 CLEAR vars-complex_level->colon_token.
-                vars-deep = vars-deep + _1.
+                vars-deep += _1.
                 json_offset = match_offset + _1.
                 CONTINUE.
               WHEN `]`.
-                IF     vars-complex_level        IS NOT BOUND
-                   OR vars-complex_level->token  IS NOT BOUND
+                IF    vars-complex_level              IS NOT BOUND
+                   OR vars-complex_level->token       IS NOT BOUND
                    OR vars-complex_level->token->type <> cm_token_types-left_square_bracket.
-                  exception = s_new_parse_error( json    = json
-                                                 offset  = match_offset
-                                                 message = `Invalid token. there is no open array which should be closed with ']'.` ).
+                  exception = s_new_parse_error(
+                                  json    = json
+                                  offset  = match_offset
+                                  message = `Invalid token. there is no open array which should be closed with ']'.` ).
                   RAISE EXCEPTION exception.
                 ENDIF.
-                vars-deep = vars-deep - _1.
+                vars-deep -= _1.
                 INSERT VALUE #( type   = cm_token_types-right_square_bracket
                                 offset = match_offset
                                 length = _1
@@ -448,7 +450,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 IF match_offset < _0.
                   match_offset = strlen( json ) - json_offset.
                 ENDIF.
-                match_offset = match_offset - json_offset.
+                match_offset -= json_offset.
                 match = json+json_offset(match_offset).
 
                 IF        match IS INITIAL
@@ -460,7 +462,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                   RAISE EXCEPTION exception.
                 ENDIF.
 
-                vars-node = vars-node + _1.
+                vars-node += _1.
                 INSERT VALUE #( type   = cm_token_types-number
                                 offset = json_offset
                                 length = match_offset
@@ -470,7 +472,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
                 IF vars-complex_level IS BOUND.
                   CLEAR vars-complex_level->colon_token.
                 ENDIF.
-                json_offset = json_offset + match_offset.
+                json_offset += match_offset.
                 CONTINUE.
             ENDCASE.
 
@@ -488,19 +490,20 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
       RAISE EXCEPTION end_exception.
     ENDIF.
 
-    IF vars-deep > _0
-       OR (     vars-complex_level IS BOUND
+    IF    vars-deep > _0
+       OR (     vars-complex_level           IS BOUND
             AND vars-complex_level->previous IS BOUND ).
       DATA(unclosed_message) = COND string(
-        WHEN     vars-complex_level IS BOUND
-             AND vars-complex_level->token IS BOUND
-             AND vars-complex_level->token->type = cm_token_types-left_brace
-        THEN `Invalid token. there is no open object which should be closed with '}'.`
-        WHEN     vars-complex_level IS BOUND
-             AND vars-complex_level->token IS BOUND
-             AND vars-complex_level->token->type = cm_token_types-left_square_bracket
-        THEN `Invalid token. there is no open array which should be closed with ']'.`
-        ELSE `Invalid token. Unclosed object or array.` ).
+        WHEN vars-complex_level              IS BOUND
+         AND vars-complex_level->token       IS BOUND
+         AND vars-complex_level->token->type  = cm_token_types-left_brace THEN
+          `Invalid token. there is no open object which should be closed with '}'.`
+        WHEN vars-complex_level              IS BOUND
+         AND vars-complex_level->token       IS BOUND
+         AND vars-complex_level->token->type  = cm_token_types-left_square_bracket THEN
+          `Invalid token. there is no open array which should be closed with ']'.`
+        ELSE
+          `Invalid token. Unclosed object or array.` ).
       end_exception = s_new_parse_error( json    = json
                                          offset  = strlen( json )
                                          message = unclosed_message ).
@@ -509,7 +512,6 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD s_read_string_token.
-
     TYPES lty_x2 TYPE x LENGTH _2.
 
     DATA var TYPE ty_s_read_string_variables.
@@ -543,21 +545,21 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
           result-string = ``.
         ENDIF.
 
-        result-token_count = result-token_count + _1.
+        result-token_count += _1.
 
         var-len = var-escape_token->offset - var-offset.
         " append previous string
         IF var-len > 0.
           result-string = result-string && json+var-offset(var-len).
-          var-length = var-length + var-len.
+          var-length += var-len.
         ENDIF.
 
-        var-offset = var-escape_token->offset + var-escape_token->length.
-        var-length = var-length               + var-escape_token->length.
+        var-offset  = var-escape_token->offset + var-escape_token->length.
+        var-length += var-escape_token->length.
 
-        var-off    = var-escape_token->offset + _1.
+        var-off     = var-escape_token->offset + _1.
 
-        var-part   = json+var-off(_1).
+        var-part    = json+var-off(_1).
 
         CASE var-part.
           WHEN `"`
@@ -624,7 +626,6 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD s_new_parse_error.
-
     IF json IS INITIAL.
       result = NEW /ork/cx_exception( text     = message
                                       previous = previous ).
@@ -686,25 +687,22 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
     result = NEW /ork/cx_exception( text     = text
                                     longtext = longtext
                                     previous = previous ).
-
   ENDMETHOD.
 
   METHOD s_get_line_pos.
-
     FIND ALL OCCURRENCES OF |\n| IN text(offset) IN CHARACTER MODE MATCH COUNT result-line.
-    result-line = result-line + 1.
+    result-line += 1.
 
-    result-pos  = find_end( val = text
-                            sub = |\n|
-                            off = offset
-                            occ = -1 ).
+    result-pos   = find_end( val = text
+                             sub = |\n|
+                             off = offset
+                             occ = -1 ).
     IF result-pos < 0.
       " no \n found before the offset ... so: new line starts at offset 0.
       result-pos = 0.
     ENDIF.
 
     result-pos = offset - result-pos.
-
   ENDMETHOD.
 
   METHOD s_parse.
@@ -718,6 +716,9 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
 
   METHOD class_constructor.
     default = NEW /ork/cl_json_parser( ).
+    sxml = NEW lcl_sxml_parser( ).
+    lazy = NEW lcl_sxml_lazy_parser( ).
+
     sm_pseudo_constants-white_spaces            = cl_abap_char_utilities=>get_simple_spaces_for_cur_cp( ).
     sm_pseudo_constants-white_spaces_or_control = |{ sm_pseudo_constants-white_spaces },\}]|.
   ENDMETHOD.
@@ -727,7 +728,6 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_parser~string.
-
     DATA(token_list) = s_parse_result( json ).
 
     IF token_list[] IS INITIAL.
@@ -749,7 +749,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
     DATA(token_index) = _0.
     WHILE token_index < lines( token_list[] ).
 
-      token_index = token_index + _1.
+      token_index += _1.
       DATA(token) = REF #( token_list[ token_index ] ).
       DATA(prev_token_type) = COND ty_token_type(
         WHEN token_index > _1
@@ -853,7 +853,7 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
           parent_node->add_member_or_array_elem( name = object_member_name
                                                  elem = NEW /ork/cl_json_node_null( ) ).
         WHEN cm_token_types-comma. "  ,
-          IF     prev_token_type = cm_token_types-left_brace
+          IF    prev_token_type = cm_token_types-left_brace
              OR prev_token_type = cm_token_types-left_square_bracket
              OR prev_token_type = cm_token_types-colon
              OR prev_token_type = cm_token_types-comma
@@ -927,8 +927,5 @@ CLASS /ork/cl_json_parser IMPLEMENTATION.
         RETURN NEW lcl_root_null( json ).
       WHEN OTHERS.
     ENDCASE.
-
   ENDMETHOD.
-
 ENDCLASS.
-

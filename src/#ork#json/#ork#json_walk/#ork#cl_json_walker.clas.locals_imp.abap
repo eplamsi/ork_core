@@ -2,11 +2,43 @@
 *"* local helper classes, interface definitions and type
 *"* declarations
 
+CLASS lcl_parent_stack DEFINITION
+  INHERITING FROM /ork/cl_json_node_array
+  CREATE PRIVATE
+  FRIENDS /ork/cl_json_walker.
 
+  PRIVATE SECTION.
+    METHODS constructor.
+
+    DATA my_stack TYPE /ork/cl_json_node_array=>ty_s_this.
+
+    METHODS push IMPORTING !node TYPE REF TO /ork/if_json_node.
+    METHODS pop.
+
+ENDCLASS.
+
+
+CLASS lcl_parent_stack IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor( this = REF #( my_stack ) ).
+    /ork/if_json_node~freeze( ).
+  ENDMETHOD.
+
+  METHOD pop.
+    CHECK my_stack-nodes[] IS NOT INITIAL.
+    DELETE my_stack-nodes[] INDEX lines( my_stack-nodes[] ).
+  ENDMETHOD.
+
+  METHOD push.
+    INSERT node INTO TABLE my_stack-nodes[].
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_json_frame_stack DEFINITION DEFERRED.
 CLASS lcl_json_frame DEFINITION
-  CREATE PUBLIC.
+  CREATE PRIVATE FRIENDS /ork/cl_json_walker lcl_json_frame_stack.
 
-  PUBLIC SECTION.
+  PRIVATE SECTION.
     TYPES ty_tt TYPE STANDARD TABLE OF REF TO lcl_json_frame WITH EMPTY KEY.
 
     DATA my_node     TYPE REF TO /ork/if_json_node.
@@ -37,9 +69,10 @@ ENDCLASS.
 
 
 CLASS lcl_json_frame_stack DEFINITION
-  CREATE PUBLIC.
+  CREATE PUBLIC
+  FRIENDS /ork/cl_json_walker.
 
-  PUBLIC SECTION.
+  PRIVATE SECTION.
     METHODS is_empty RETURNING VALUE(result) TYPE abap_bool.
 
     METHODS pop.
@@ -48,7 +81,6 @@ CLASS lcl_json_frame_stack DEFINITION
 
     METHODS push     IMPORTING !frame        TYPE REF TO lcl_json_frame.
 
-  PROTECTED SECTION.
     DATA my_frames TYPE lcl_json_frame=>ty_tt.
 
 ENDCLASS.

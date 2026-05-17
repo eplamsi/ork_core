@@ -24,7 +24,6 @@ ENDCLASS.
 
 
 CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
-
   METHOD constructor.
     /ork/if_si_abap_ref~is      = me.
     /ork/if_si_abap_ref~as      = me.
@@ -117,7 +116,7 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
 
       " does not work in CP!
       " DESCRIBE FIELD ref->* LENGTH DATA(len) IN CHARACTER MODE.
-      DATA(len) = /ork/cl_abap=>rtts->get->elem->by_ref( ref )->length / cl_abap_char_utilities=>charsize.
+      DATA(len) = /ork/cl_abap=>rtts->get->elem->by_ref( ref )->length.
 
       IF len <> of_length.
         result = abap_false.
@@ -136,9 +135,7 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
     TRY.
         result = lines( tab->* ).
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING
-            previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
@@ -150,9 +147,7 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
         ASSIGN tab->* TO <tab>.
         CREATE DATA result LIKE LINE OF <tab>.
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING
-            previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
@@ -218,13 +213,10 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   METHOD check_table.
     IF NOT /ork/cl_abap=>rtts->generic-table->applies_to_data_ref( ref ).
       IF ref IS NOT BOUND.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING
-            previous = NEW cx_sy_ref_is_initial( ).
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = NEW cx_sy_ref_is_initial( ) ).
       ELSE.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING
-            text = |Type '{ /ork/cl_abap=>rtts->get_name( /ork/cl_abap=>rtts->get->type->by_ref( ref ) ) }' is not a table|.
+        RAISE EXCEPTION NEW /ork/cx_exception(
+            text = |Type '{ /ork/cl_abap=>rtts->get_name( /ork/cl_abap=>rtts->get->type->by_ref( ref ) ) }' is not a table| ).
       ENDIF.
     ENDIF.
   ENDMETHOD.
@@ -233,9 +225,7 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
     TRY.
         result = rtts->applies_to_data_ref( /ork/if_si_abap_table_ref~create_line_of( tab ) ).
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION TYPE /ork/cx_exception
-          EXPORTING
-            previous = exception.
+        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
   ENDMETHOD.
 
@@ -280,10 +270,11 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~hashed_table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-hashed_table->check_applies_to( var  = ref
-*                                                              name = `REF->*` ).
-*    result = ref.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-hashed_table->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-hashed_table->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~index_table.
@@ -293,7 +284,8 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~index_table.
-    IF NOT /ork/cl_abap=>rtts->generic-index_table->applies_to_data_ref( ref ).
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-index_table->applies_to_data_ref( ref ).
       RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-index_table->get_relative_name( ) }| ).
     ENDIF.
     result = ref.
@@ -306,52 +298,55 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~int2.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-int2->check_applies_to( var  = ref
-*                                                      name = `REF->*` ).
-*    result = ref->*.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->common-int2->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->common-int2->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref->*.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~int4.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    IF /ork/cl_le_type=>sm_type-int4->applies_to( ref ).
-*      result = ref->*.
-*    ENDIF.
+    IF /ork/cl_abap=>rtts->common-i->applies_to_data_ref( ref ).
+      result = ref->*.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~int4.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-int4->check_applies_to( var  = ref
-*                                                      name = `REF->*` ).
-*    result = ref->*.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->common-i->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->common-i->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref->*.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~int8.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    IF /ork/cl_le_type=>sm_type-int8->applies_to( ref ).
-*      result = ref->*.
-*    ENDIF.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->common-int8->applies_to_data_ref( ref ).
+      result = ref->*.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~int8.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-int8->check_applies_to( var  = ref
-*                                                      name = `REF->*` ).
-*    result = ref->*.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->common-int8->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->common-int8->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref->*.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~object.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    IF /ork/cl_le_type=>sm_type-object->applies_to( ref ).
-*      result ?= ref->*.
-*    ENDIF.
+    IF     ref IS BOUND
+       AND cl_abap_datadescr=>get_data_type_kind( ref->* )  = cl_abap_datadescr=>typekind_oref.
+      result ?= ref->*.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~object.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-object->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result ?= ref->*.
+    IF        ref IS NOT BOUND
+       OR NOT cl_abap_datadescr=>get_data_type_kind( ref->* )  = cl_abap_datadescr=>typekind_oref.
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-object->get_relative_name( ) }| ).
+    ENDIF.
+    result ?= ref->*.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~read_only.
@@ -370,101 +365,118 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~ref.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    IF /ork/cl_le_type=>sm_type-ref->applies_to( ref ).
-*      result ?= ref->*.
-*    ENDIF.
+    IF     ref IS BOUND
+       AND cl_abap_datadescr=>get_data_type_kind( ref->* )  = cl_abap_datadescr=>typekind_dref.
+      result ?= ref->*.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~ref.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-ref->check_applies_to( var  = ref
-*                                                     name = `REF->*` ).
-*    result ?= ref->*.
+    IF        ref IS NOT BOUND
+       OR NOT cl_abap_datadescr=>get_data_type_kind( ref->* )  = cl_abap_datadescr=>typekind_dref.
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-ref_to_data->get_relative_name( ) }| ).
+    ENDIF.
+    result ?= ref->*.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~simple.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-simple->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = ref.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->generic-simple->applies_to_data_ref( ref ).
+      result = ref.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~simple.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-simple->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = ref.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-simple->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-simple->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~sorted_table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-sorted_table->check_applies_to( var  = ref
-*                                                              name = `REF->*` ).
-*    result = ref.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->generic-sorted_table->applies_to_data_ref( ref ).
+      result = ref.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~sorted_table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-sorted_table->check_applies_to( var  = ref
-*                                                              name = `REF->*` ).
-*    result = ref.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-sorted_table->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-sorted_table->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~standard_table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-standard_table->check_applies_to( var  = ref
-*                                                                name = `REF->*` ).
-*    result = ref.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->generic-standard_table->applies_to_data_ref( ref ).
+      result = ref.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~standard_table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-standard_table->check_applies_to( var  = ref
-*                                                                name = `REF->*` ).
-*    result = ref.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-standard_table->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-standard_table->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~string.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-simple->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = |{ ref->* }|.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->generic-simple->applies_to_data_ref( ref ).
+      result = |{ ref->* }|.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~string.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-simple->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = |{ ref->* }|.
+    IF        ref IS NOT BOUND
+       OR NOT /ork/cl_abap=>rtts->generic-simple->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-simple->get_relative_name( ) }| ).
+    ENDIF.
+    result = |{ ref->* }|.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~struct.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-struct->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = ref.
+    IF ref IS BOUND.
+      DATA(typekind) = cl_abap_datadescr=>get_data_type_kind( ref->* ).
+    ENDIF.
+    CASE typekind.
+      WHEN cl_abap_typedescr=>typekind_struct1
+        OR cl_abap_typedescr=>typekind_struct2.
+        result = ref.
+      WHEN OTHERS.
+        RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not a struct| ).
+    ENDCASE.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~struct.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-struct->check_applies_to( var  = ref
-*                                                        name = `REF->*` ).
-*    result = ref.
+    IF ref IS BOUND.
+      DATA(typekind) = cl_abap_datadescr=>get_data_type_kind( ref->* ).
+    ENDIF.
+    CASE typekind.
+      WHEN cl_abap_typedescr=>typekind_struct1
+        OR cl_abap_typedescr=>typekind_struct2.
+        result = ref.
+      WHEN OTHERS.
+    ENDCASE.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-any_table->check_applies_to( var  = ref
-*                                                           name = `REF->*` ).
-*    result = ref.
+    IF     ref IS BOUND
+       AND /ork/cl_abap=>rtts->generic-table->applies_to_data_ref( ref ).
+      result = ref.
+    ENDIF.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_cast_to~table.
-    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
-*    /ork/cl_le_type=>sm_type-any_table->check_applies_to( var  = ref
-*                                                           name = `REF->*` ).
-*    result = ref.
+    IF         ref IS BOUND
+       AND NOT /ork/cl_abap=>rtts->generic-table->applies_to_data_ref( ref ).
+      RAISE EXCEPTION NEW /ork/cx_exception( |REF->* is not of type { /ork/cl_abap=>rtts->generic-table->get_relative_name( ) }| ).
+    ENDIF.
+    result = ref.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_as~writable.
@@ -483,14 +495,12 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref~new_of_type.
-
     TRY.
         DATA(data_rtts) = /ork/cl_abap=>rtts->normalize_to_data( rtts ).
         CREATE DATA result TYPE HANDLE data_rtts.
       CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
         RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
     ENDTRY.
-
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_struct_ref~assign_field.
@@ -503,87 +513,131 @@ CLASS /ork/cl_si_abap_ref IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_struct_ref~move_to_initial_fields.
+    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
 
-    TRY.
-
-        IF NOT ( src_struct IS BOUND AND dst_struct IS BOUND ).
-          RETURN.
-        ENDIF.
-        IF NOT /ork/if_si_abap_ref_is~writable( dst_struct ).
-          RETURN.
-        ENDIF.
-
-        DATA(type_src) = cl_abap_typedescr=>describe_by_data_ref( src_struct ).
-        DATA(type_dst) = cl_abap_typedescr=>describe_by_data_ref( dst_struct ).
-
-        IF    type_src->kind <> cl_abap_typedescr=>kind_struct
-           OR type_dst->kind <> cl_abap_typedescr=>kind_struct.
-          RETURN.
-        ENDIF.
-
-        result = dst_struct.
-
-        DATA(src_fields) = CAST cl_abap_structdescr( type_src )->get_included_view( ).
-        IF type_src = type_dst.
-          LOOP AT src_fields ASSIGNING FIELD-SYMBOL(<src_field>).
-            ASSIGN dst_struct->(<src_field>-name) TO FIELD-SYMBOL(<dst_val>).
-            IF <dst_val> IS NOT INITIAL.
-              CONTINUE.
-            ENDIF.
-            ASSIGN src_struct->(<src_field>-name) TO FIELD-SYMBOL(<src_val>).
-            IF    <src_field>-type->type_kind = <src_field>-type->typekind_oref
-               OR <src_field>-type->type_kind = <src_field>-type->typekind_dref.
-              <dst_val> ?= <src_val>.
-            ELSE.
-              <dst_val> = <src_val>.
-            ENDIF.
-          ENDLOOP.
-        ELSE.
-          LOOP AT src_fields ASSIGNING <src_field>.
-            ASSIGN dst_struct->(<src_field>-name) TO <dst_val>.
-            IF sy-subrc <> 0 OR <dst_val> IS NOT INITIAL.
-              CONTINUE.
-            ENDIF.
-            ASSIGN src_struct->(<src_field>-name) TO <src_val>.
-            IF NOT /ork/if_si_abap_ref_is~compatible( src = <src_val>
-                                                      dst = <dst_val> ).
-              CONTINUE.
-            ENDIF.
-            IF    <src_field>-type->type_kind = <src_field>-type->typekind_oref
-               OR <src_field>-type->type_kind = <src_field>-type->typekind_dref.
-              <dst_val> ?= <src_val>.
-            ELSE.
-              <dst_val> = <src_val>.
-            ENDIF.
-          ENDLOOP.
-        ENDIF.
-
-      CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
-        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
-    ENDTRY.
-
+*    TRY.
+*
+*        IF NOT ( src_struct IS BOUND AND dst_struct IS BOUND ).
+*          RETURN.
+*        ENDIF.
+*        IF NOT /ork/if_si_abap_ref_is~writable( dst_struct ).
+*          RETURN.
+*        ENDIF.
+*
+*        DATA(type_src) = cl_abap_typedescr=>describe_by_data_ref( src_struct ).
+*        DATA(type_dst) = cl_abap_typedescr=>describe_by_data_ref( dst_struct ).
+*
+*        IF    type_src->kind <> cl_abap_typedescr=>kind_struct
+*           OR type_dst->kind <> cl_abap_typedescr=>kind_struct.
+*          RETURN.
+*        ENDIF.
+*
+*        result = dst_struct.
+*
+*        DATA(src_fields) = CAST cl_abap_structdescr( type_src )->get_included_view( ).
+*        IF type_src = type_dst.
+*          LOOP AT src_fields ASSIGNING FIELD-SYMBOL(<src_field>).
+*            ASSIGN dst_struct->(<src_field>-name) TO FIELD-SYMBOL(<dst_val>).
+*            IF <dst_val> IS NOT INITIAL.
+*              CONTINUE.
+*            ENDIF.
+*            ASSIGN src_struct->(<src_field>-name) TO FIELD-SYMBOL(<src_val>).
+*            IF    <src_field>-type->type_kind = <src_field>-type->typekind_oref
+*               OR <src_field>-type->type_kind = <src_field>-type->typekind_dref.
+*              <dst_val> ?= <src_val>.
+*            ELSE.
+*              <dst_val> = <src_val>.
+*            ENDIF.
+*          ENDLOOP.
+*        ELSE.
+*          LOOP AT src_fields ASSIGNING <src_field>.
+*            ASSIGN dst_struct->(<src_field>-name) TO <dst_val>.
+*            IF sy-subrc <> 0 OR <dst_val> IS NOT INITIAL.
+*              CONTINUE.
+*            ENDIF.
+*            ASSIGN src_struct->(<src_field>-name) TO <src_val>.
+*            IF NOT /ork/if_si_abap_ref_is~compatible( src = <src_val>
+*                                                      dst = <dst_val> ).
+*              CONTINUE.
+*            ENDIF.
+*            IF    <src_field>-type->type_kind = <src_field>-type->typekind_oref
+*               OR <src_field>-type->type_kind = <src_field>-type->typekind_dref.
+*              <dst_val> ?= <src_val>.
+*            ELSE.
+*              <dst_val> = <src_val>.
+*            ENDIF.
+*          ENDLOOP.
+*        ENDIF.
+*
+*      CATCH cx_root INTO DATA(exception) ##CATCH_ALL.
+*        RAISE EXCEPTION NEW /ork/cx_exception( previous = exception ).
+*    ENDTRY.
   ENDMETHOD.
 
   METHOD /ork/if_si_abap_ref_is~compatible.
-
     RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
 
-*    DATA(type_dst) = /ork/cl_le_type=>s_get_by_ref( dst ).
+*    CHECK dst IS BOUND AND src IS BOUND.
 *
-*    result = type_dst->applies_to( src ).
+*    DATA(declared_type_of_dst) = cl_abap_typedescr=>describe_by_data_ref( dst ).
 *
-*    IF result = abap_false
-*       AND type_dst->is_simple( )
-*       AND /ork/cl_le_type=>s_get_by_ref( src )->is_simple( ).
+*    CASE declared_type_of_dst->type_kind.
+*      WHEN cl_abap_typedescr=>typekind_oref.
 *
-*      " Usually, elementary variables can be converted during assignment without dumping, e.g. I to string and vice versa.
-*      " However, exceptions can occur, e.g. INT overflow ( CX_SY_CONVERSION_OVERFLOW ).
-*      " see also conversion rules: https://help.sap.com/doc/abapdocu_740_index_htm/7.40/de-DE/abenconversion_elementary.htm
-*      " see also EXACT #( ). https://help.sap.com/doc/abapdocu_740_index_htm/7.40/de-DE/abenlossless_move.htm
-*      result = abap_true.
+*        DATA(declared_type_of_src) = cl_abap_typedescr=>describe_by_data_ref( src ).
+*        IF declared_type_of_src->type_kind <> cl_abap_typedescr=>typekind_oref.
+*          RETURN abap_false.
+*        ENDIF.
+*        DATA(obj_descr_dst) = CAST cl_abap_objectdescr( CAST cl_abap_refdescr( declared_type_of_dst )->get_referenced_type( ) ).
+*        IF src->* IS BOUND.
+*          RETURN obj_descr_dst->applies_to( src->* ).
+*        ELSE.
+*          DATA(obj_descr_src) = CAST cl_abap_objectdescr( CAST cl_abap_refdescr( declared_type_of_src )->get_referenced_type( ) ).
+*          IF obj_descr_src = obj_descr_dst.
+*            RETURN abap_true.
+*          ENDIF.
+*          IF obj_descr_src IS INSTANCE OF cl_abap_classdescr.
+*            RETURN obj_descr_dst->applies_to_class( obj_descr_src->absolute_name ).
+*          ELSE.
+*            IF obj_descr_dst IS INSTANCE OF cl_abap_classdescr.
+*              RETURN abap_false.
+*            ENDIF.
+*            " both interfaces ...
+*            LOOP AT obj_descr_src->interfaces ASSIGNING FIELD-SYMBOL(<intf>).
+*              IF obj_descr_src->get_interface_type( <intf>-name ) = obj_descr_dst.
+*                RETURN abap_true.
+*              ENDIF.
+*            ENDLOOP.
+*            RETURN abap_false.
+*          ENDIF.
+*        ENDIF.
 *
-*    ENDIF.
-
+*      WHEN cl_abap_typedescr=>typekind_dref.
+*        declared_type_of_src = cl_abap_typedescr=>describe_by_data_ref( src ).
+*        IF declared_type_of_src->type_kind <> cl_abap_typedescr=>typekind_dref.
+*          RETURN abap_false.
+*        ENDIF.
+*
+*
+*      WHEN OTHERS.
+*    ENDCASE.
+*
+*    RAISE EXCEPTION NEW /ork/cx_exception( `Not yet implemented` ).
+*
+**    DATA(type_dst) = /ork/cl_le_type=>s_get_by_ref( dst ).
+**
+**    result = type_dst->applies_to( src ).
+**
+**    IF result = abap_false
+**       AND type_dst->is_simple( )
+**       AND /ork/cl_le_type=>s_get_by_ref( src )->is_simple( ).
+**
+**      " Usually, elementary variables can be converted during assignment without dumping, e.g. I to string and vice versa.
+**      " However, exceptions can occur, e.g. INT overflow ( CX_SY_CONVERSION_OVERFLOW ).
+**      " see also conversion rules: https://help.sap.com/doc/abapdocu_740_index_htm/7.40/de-DE/abenconversion_elementary.htm
+**      " see also EXACT #( ). https://help.sap.com/doc/abapdocu_740_index_htm/7.40/de-DE/abenlossless_move.htm
+**      result = abap_true.
+**
+**    ENDIF.
   ENDMETHOD.
-
 ENDCLASS.

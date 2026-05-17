@@ -32,6 +32,51 @@
      <DESCRIPT>Get node by index</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>GET_ARRAY</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get array node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BOOL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get boolean node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BOOL_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get boolean value by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NULL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get null node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NUMBER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get number node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NUMBER_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get number value by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OBJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get object node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STRING</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get string node by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STRING_VALUE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Get string value by index</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>INSERT</CMPNAME>
      <LANGU>E</LANGU>
      <DESCRIPT>Insert node at index</DESCRIPT>

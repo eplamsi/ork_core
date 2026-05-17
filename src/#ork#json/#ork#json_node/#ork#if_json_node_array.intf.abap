@@ -108,4 +108,113 @@ INTERFACE /ork/if_json_node_array
   "! @parameter result | New iterator instance
   METHODS iterator RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_iterator.
 
+  "! <p class="shorttext synchronized">Get array node by index</p>
+  "! <p>
+  "! Returns the array node at the given one-based index.
+  "! If the index is out of range or the node is not an array, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback array node (optional)
+  "! @parameter result   | Array node at index (or fallback)
+  METHODS get_array IMPORTING !index        TYPE i
+                              fallback      TYPE REF TO /ork/if_json_node_array DEFAULT /ork/cl_json=>fallback-array
+                    RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_array.
+
+  "! <p class="shorttext synchronized">Get object node by index</p>
+  "! <p>
+  "! Returns the object node at the given one-based index.
+  "! If the index is out of range or the node is not an object, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback object node (optional)
+  "! @parameter result   | Object node at index (or fallback)
+  METHODS get_object IMPORTING !index        TYPE i
+                               fallback      TYPE REF TO /ork/if_json_node_object DEFAULT /ork/cl_json=>fallback-object
+                     RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_object.
+
+  "! <p class="shorttext synchronized">Get null node by index</p>
+  "! <p>
+  "! Returns the null node at the given one-based index.
+  "! If the index is out of range or the node is not null, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback null node (optional)
+  "! @parameter result   | Null node at index (or fallback)
+  METHODS get_null IMPORTING !index        TYPE i
+                             fallback      TYPE REF TO /ork/if_json_node_null DEFAULT /ork/cl_json=>fallback-null
+                   RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_null.
+
+  "! <p class="shorttext synchronized">Get number node by index</p>
+  "! <p>
+  "! Returns the number node at the given one-based index.
+  "! If the index is out of range or the node is not a number, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback number node (optional)
+  "! @parameter result   | Number node at index (or fallback)
+  METHODS get_number IMPORTING !index        TYPE i
+                               fallback      TYPE REF TO /ork/if_json_node_number DEFAULT /ork/cl_json=>fallback-number
+                     RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_number.
+
+  "! <p class="shorttext synchronized">Get string node by index</p>
+  "! <p>
+  "! Returns the string node at the given one-based index.
+  "! If the index is out of range or the node is not a string, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback string node (optional)
+  "! @parameter result   | String node at index (or fallback)
+  METHODS get_string IMPORTING !index        TYPE i
+                               fallback      TYPE REF TO /ork/if_json_node_string DEFAULT /ork/cl_json=>fallback-string
+                     RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_string.
+
+  "! <p class="shorttext synchronized">Get boolean node by index</p>
+  "! <p>
+  "! Returns the boolean node at the given one-based index.
+  "! If the index is out of range or the node is not a boolean, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback boolean node (optional)
+  "! @parameter result   | Boolean node at index (or fallback)
+  METHODS get_bool IMPORTING !index        TYPE i
+                             fallback      TYPE REF TO /ork/if_json_node_bool DEFAULT /ork/cl_json=>fallback-bool
+                   RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_bool.
+
+  "! <p class="shorttext synchronized">Get number value by index</p>
+  "! <p>
+  "! Returns the numeric value of the number node at the given one-based index.
+  "! If the index is out of range or the node is not a number, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback numeric value (optional)
+  "! @parameter result   | Numeric value at index (or fallback)
+  METHODS get_number_value IMPORTING !index        TYPE i
+                                     fallback      TYPE numeric OPTIONAL
+                           RETURNING VALUE(result) TYPE decfloat34.
+
+  "! <p class="shorttext synchronized">Get string value by index</p>
+  "! <p>
+  "! Returns the text value of the string node at the given one-based index.
+  "! If the index is out of range or the node is not a string, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback string value (optional)
+  "! @parameter result   | String value at index (or fallback)
+  METHODS get_string_value IMPORTING !index        TYPE i
+                                     fallback      TYPE string OPTIONAL
+                           RETURNING VALUE(result) TYPE string.
+
+  "! <p class="shorttext synchronized">Get boolean value by index</p>
+  "! <p>
+  "! Returns the boolean value of the boolean node at the given one-based index.
+  "! If the index is out of range or the node is not a boolean, the optional fallback is returned.
+  "! </p>
+  "! @parameter index    | One-based node index
+  "! @parameter fallback | Fallback boolean value (optional)
+  "! @parameter result   | Boolean value at index (or fallback)
+  METHODS get_bool_value IMPORTING !index        TYPE i
+                                   fallback      TYPE abap_bool OPTIONAL
+                         RETURNING VALUE(result) TYPE abap_bool.
+
+
 ENDINTERFACE.

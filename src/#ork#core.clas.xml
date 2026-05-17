@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>/ORK/CL_JSON_NODE</CLSNAME>
+    <CLSNAME>/ORK/CORE</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>JSON Node</DESCRIPT>
+    <DESCRIPT>Provides ORK core version</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>

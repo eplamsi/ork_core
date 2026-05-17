@@ -234,7 +234,10 @@ CLASS ltc_unit_test IMPLEMENTATION.
     DO runs TIMES.
       DATA(node_lazy) = lazy_parser->bytes( json     = json_b
                                             encoding = encoding ).
-      DATA(num_str_lazy) = node_lazy->as_array( )->get( 5 )->as_object( )->get( `'number'` )->as_number( )->get_number_string( ).
+      node_lazy->freeze( ).
+      DATA(num_lazy) = node_lazy->as_array( )->get( 5 )->as_object( )->get( `'number'` )->as_number( ).
+      _true( num_lazy->is_frozen( ) ).
+      DATA(num_str_lazy) = num_lazy->get_number_string( ).
       DATA(node_full) = full_parser->bytes( json     = json_b
                                             encoding = encoding ).
       DATA(num_str_full) = node_lazy->as_array( )->get( 5 )->as_object( )->get( `'number'` )->as_number( )->get_number_string( ).

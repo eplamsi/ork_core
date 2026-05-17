@@ -20,9 +20,9 @@ CLASS /ork/cl_json_node_bool DEFINITION
              value TYPE abap_bool,
            END OF ty_s_this.
 
-    METHODS constructor                 IMPORTING !this         TYPE REF TO ty_s_this OPTIONAL.
+    METHODS constructor              IMPORTING !this         TYPE REF TO ty_s_this OPTIONAL.
 
-    METHODS cast                        RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_bool.
+    METHODS cast                     RETURNING VALUE(result) TYPE REF TO /ork/if_json_node_bool.
     METHODS /ork/if_json_node~equals REDEFINITION.
 
   PROTECTED SECTION.
@@ -33,7 +33,6 @@ ENDCLASS.
 
 
 CLASS /ork/cl_json_node_bool IMPLEMENTATION.
-
   METHOD cast.
     RETURN me.
   ENDMETHOD.
@@ -77,6 +76,7 @@ CLASS /ork/cl_json_node_bool IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_node~freeze.
+    CHECK NOT _is_immutable( my ).
     my ?= _to_immutable( my ).
   ENDMETHOD.
 
@@ -85,7 +85,6 @@ CLASS /ork/cl_json_node_bool IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_node~equals.
-
     IF        other IS NOT BOUND
        OR NOT other->is_bool( ).
       RETURN abap_false.
@@ -94,7 +93,5 @@ CLASS /ork/cl_json_node_bool IMPLEMENTATION.
     _lazy_read_to_end( ).
     RETURN xsdbool(    other = me
                     OR other->as_bool( )->get( ) = my->value ).
-
   ENDMETHOD.
-
 ENDCLASS.

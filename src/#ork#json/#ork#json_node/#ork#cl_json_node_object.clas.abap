@@ -111,6 +111,7 @@ CLASS /ork/cl_json_node_object IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD /ork/if_json_node~freeze.
+    CHECK NOT _is_immutable( my ).
     my ?= _to_immutable( my ).
     LOOP AT my->members ASSIGNING FIELD-SYMBOL(<member>).
       <member>-node->freeze( ).
@@ -145,5 +146,83 @@ CLASS /ork/cl_json_node_object IMPLEMENTATION.
 
     _lazy_read_to_index( item-index + 1 ).
     RETURN xsdbool( item-index = lines( my->members ) ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_array.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_array( )
+                   THEN candidate->as_array( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_bool.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_bool( )
+                   THEN candidate->as_bool( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_bool_value.
+    DATA(candidate) = /ork/if_json_node_object~get( name ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_bool( )
+                   THEN candidate->as_bool( )->get( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_null.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_null( )
+                   THEN candidate->as_null( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_number.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_number( )
+                   THEN candidate->as_number( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_number_value.
+    DATA(candidate) = /ork/if_json_node_object~get( name ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_number( )
+                   THEN candidate->as_number( )->get( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_object.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_object( )
+                   THEN candidate->as_object( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_string.
+    DATA(candidate) = /ork/if_json_node_object~get( name     = name
+                                                    fallback = fallback ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_string( )
+                   THEN candidate->as_string( )
+                   ELSE fallback ).
+  ENDMETHOD.
+
+  METHOD /ork/if_json_node_object~get_string_value.
+    DATA(candidate) = /ork/if_json_node_object~get( name ).
+    RETURN COND #( WHEN candidate IS BOUND
+                    AND candidate->is_string( )
+                   THEN candidate->as_string( )->get( )
+                   ELSE fallback ).
   ENDMETHOD.
 ENDCLASS.

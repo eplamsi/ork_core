@@ -13,6 +13,8 @@ ENDCLASS.
 CLASS /ork/cl_json_walker IMPLEMENTATION.
   METHOD walk.
     DATA(stack) = NEW lcl_json_frame_stack( ).
+    DATA(parents) = NEW lcl_parent_stack( ).
+
     stack->push( NEW lcl_json_frame( node = root
                                      path = /ork/cl_json_path=>s_root( ) ) ).
 
@@ -27,35 +29,42 @@ CLASS /ork/cl_json_walker IMPLEMENTATION.
 
         CASE TYPE OF frame->my_node.
           WHEN TYPE /ork/if_json_node_array INTO DATA(array).
-            DATA(visit_result) = visitor->enter_array( node = array
-                                                       path = frame->my_path ).
+            DATA(visit_result) = visitor->enter_array( node          = array
+                                                       path          = frame->my_path
+                                                       parents_stack = parents ).
 
           WHEN TYPE /ork/if_json_node_object INTO DATA(object).
-            visit_result = visitor->enter_object( node = object
-                                                  path = frame->my_path ).
+            visit_result = visitor->enter_object( node          = object
+                                                  path          = frame->my_path
+                                                  parents_stack = parents ).
 
           WHEN TYPE /ork/if_json_node_bool INTO DATA(bool).
-            visit_result = visitor->visit_bool( node = bool
-                                                path = frame->my_path ).
+            visit_result = visitor->visit_bool( node          = bool
+                                                path          = frame->my_path
+                                                parents_stack = parents ).
 
           WHEN TYPE /ork/if_json_node_string INTO DATA(string).
-            visit_result = visitor->visit_string( node = string
-                                                  path = frame->my_path ).
+            visit_result = visitor->visit_string( node          = string
+                                                  path          = frame->my_path
+                                                  parents_stack = parents ).
 
           WHEN TYPE /ork/if_json_node_number INTO DATA(number).
-            visit_result = visitor->visit_number( node = number
-                                                  path = frame->my_path ).
+            visit_result = visitor->visit_number( node          = number
+                                                  path          = frame->my_path
+                                                  parents_stack = parents ).
 
           WHEN TYPE /ork/if_json_node_null INTO DATA(null).
-            visit_result = visitor->visit_null( node = null
-                                                path = frame->my_path ).
+            visit_result = visitor->visit_null( node          = null
+                                                path          = frame->my_path
+                                                parents_stack = parents ).
 
           WHEN OTHERS.
             RETURN. " ???
         ENDCASE.
 
         IF         visit_result <> /ork/if_json_visitor=>cm_visit_result-terminate
-           AND NOT ( frame->my_node->is_array( ) OR frame->my_node->is_object( ) ).
+           AND NOT (    frame->my_node->is_array( )
+                     OR frame->my_node->is_object( ) ).
           " make sure to skip leafs...
           visit_result = /ork/if_json_visitor=>cm_visit_result-skip.
         ENDIF.
@@ -65,6 +74,7 @@ CLASS /ork/cl_json_walker IMPLEMENTATION.
             RETURN.
 
           WHEN /ork/if_json_visitor=>cm_visit_result-skip.
+            parents->pop( ).
             stack->pop( ).
             CONTINUE.
 
@@ -81,12 +91,12 @@ CLASS /ork/cl_json_walker IMPLEMENTATION.
 
           CASE TYPE OF frame->my_node.
             WHEN TYPE /ork/if_json_node_array.
-
+              parents->push( current-node ).
               stack->push( NEW lcl_json_frame( node = current-node
                                                path = frame->my_path->index( current-index ) ) ).
 
             WHEN TYPE /ork/if_json_node_object.
-
+              parents->push( current-node ).
               stack->push( NEW lcl_json_frame( node = current-node
                                                path = frame->my_path->field( current-name ) ) ).
 
@@ -99,13 +109,15 @@ CLASS /ork/cl_json_walker IMPLEMENTATION.
           CASE TYPE OF frame->my_node.
             WHEN TYPE /ork/if_json_node_array INTO array.
 
-              visit_result = visitor->leave_array( node = array
-                                                   path = frame->my_path ).
+              visit_result = visitor->leave_array( node          = array
+                                                   path          = frame->my_path
+                                                   parents_stack = parents ).
 
             WHEN TYPE /ork/if_json_node_object INTO object.
 
-              visit_result = visitor->leave_object( node = object
-                                                    path = frame->my_path ).
+              visit_result = visitor->leave_object( node          = object
+                                                    path          = frame->my_path
+                                                    parents_stack = parents ).
 
           ENDCASE.
 
@@ -114,6 +126,7 @@ CLASS /ork/cl_json_walker IMPLEMENTATION.
           ENDIF.
 
           stack->pop( ).
+          parents->pop( ).
 
         ENDIF.
 
